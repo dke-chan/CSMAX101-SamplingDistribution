@@ -192,8 +192,22 @@ server <- function(input, output, session) {
   observeEvent(input$normal.Approx.Exact, {
     req(nrow(RAM$popn.df) > 0)
     if (is.numeric(RAM$popn.df[1, 1])) {
-      updateSliderInput(session, "normal.Approx.Mu", value = mean(RAM$popn.df[, 1]))
-      updateSliderInput(session, "normal.Approx.Sigma", value = sd(RAM$popn.df[, 1]) / sqrt(input$sampleSize))
+      if (input$dropdownSelect == "Normal") {
+        updateSliderInput(session, "normal.Approx.Mu", value = input$normal.mu)
+        updateSliderInput(session, "normal.Approx.Sigma", value = input$normal.sd / sqrt(input$sampleSize))  
+      } else if (input$dropdownSelect == "Old_Faithful.df") {
+        updateSliderInput(session, "normal.Approx.Mu", value = 0.3609 * 54.6149 + (1 - 0.3609) * 80.0911)
+        updateSliderInput(session, "normal.Approx.Sigma", value = sqrt(0.3609 * 5.8712^2 + (1 - 0.3609) * 5.8677^2 + (0.3609 * 54.6149^2 + (1 - 0.3609) * 80.0911^2 - (.3609 * 54.6149 + (1 - 0.3609) * 80.0911)^2)) / sqrt(input$sampleSize)) 
+      } else if (input$dropdownSelect == "Exponential") {
+        updateSliderInput(session, "normal.Approx.Mu", value = input$exponential.waiting)
+        updateSliderInput(session, "normal.Approx.Sigma", value = (1 / input$exponential.waiting) / sqrt(input$sampleSize)) 
+      } else if (input$dropdownSelect == "Uniform") {
+        updateSliderInput(session, "normal.Approx.Mu", value = sum(input$uniform.range)/2)
+        updateSliderInput(session, "normal.Approx.Sigma", value = sqrt((input$uniform.range[2] - input$uniform.range[1])^2 / 12) / sqrt(input$sampleSize)) 
+      } else {
+        updateSliderInput(session, "normal.Approx.Mu", value = mean(RAM$popn.df[, 1]))
+        updateSliderInput(session, "normal.Approx.Sigma", value = sd(RAM$popn.df[, 1]) / sqrt(input$sampleSize))  
+      }
     } else if (input$dropdownSelect == "Presidents.df") {
       if (input$president.variable == "Proportion of Democrats") {
         updateSliderInput(session, "normal.Approx.Mu", value = 17/46)
@@ -305,7 +319,7 @@ server <- function(input, output, session) {
     plotObj = ggplot(data = RAM$sample.stat.df, aes(x = RAM$sample.stat.df[, 1])) + theme_bw() + 
       xlab("Sample Statistic") +
       geom_histogram(aes(y = ..density..), fill = "tomato", col = "black",
-                     binwidth = ifelse(is.numeric(RAM$current.sample.df[1, 1]), 1, 0.1)) + ylab("Density")
+                     bins = ifelse(is.numeric(RAM$current.sample.df[1, 1]), 25, 20)) + ylab("Density")
     if (RAM$toggle) {
       plotObj = plotObj + 
         stat_function(fun = dnorm, args = list(mean = input$normal.Approx.Mu, sd = input$normal.Approx.Sigma),
