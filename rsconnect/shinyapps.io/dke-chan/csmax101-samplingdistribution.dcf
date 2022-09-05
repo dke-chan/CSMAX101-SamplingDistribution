@@ -5,7 +5,7 @@ account: dke-chan
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6875478
-bundleId: 6267457
+bundleId: 6268587
 url: https://dke-chan.shinyapps.io/csmax101-samplingdistribution/
-when: 1662299671.72683
-lastSyncTime: 1662299671.72685
+when: 1662348578.02305
+lastSyncTime: 1662348578.02306
