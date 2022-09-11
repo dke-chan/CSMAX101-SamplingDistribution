@@ -179,7 +179,7 @@ server <- function(input, output, session) {
     plotObj = ggplot(data = RAM$popn.df, aes(x = RAM$popn.df[, 1])) + theme_bw() + xlab(colnames(RAM$popn.df))
     if (is.numeric(RAM$popn.df[1, 1])) {
       plotObj + 
-        geom_histogram(aes(y = ..density..), binwidth = 1, fill = "tomato", col = "black") + ylab("Density")
+        geom_histogram(aes(y = ..density..), binwidth = 1, fill = sample(2:8, 1), col = "black") + ylab("Density")
     } else {
       plotObj + 
         geom_bar(aes(y = (..count..)/sum(..count..), fill = RAM$popn.df[, 1]), col = "black", show.legend = FALSE) +
@@ -200,7 +200,7 @@ server <- function(input, output, session) {
         updateSliderInput(session, "normal.Approx.Sigma", value = sqrt(0.3609 * 5.8712^2 + (1 - 0.3609) * 5.8677^2 + (0.3609 * 54.6149^2 + (1 - 0.3609) * 80.0911^2 - (.3609 * 54.6149 + (1 - 0.3609) * 80.0911)^2)) / sqrt(input$sampleSize)) 
       } else if (input$dropdownSelect == "Exponential") {
         updateSliderInput(session, "normal.Approx.Mu", value = input$exponential.waiting)
-        updateSliderInput(session, "normal.Approx.Sigma", value = (1 / input$exponential.waiting) / sqrt(input$sampleSize)) 
+        updateSliderInput(session, "normal.Approx.Sigma", value = input$exponential.waiting / sqrt(input$sampleSize)) 
       } else if (input$dropdownSelect == "Uniform") {
         updateSliderInput(session, "normal.Approx.Mu", value = sum(input$uniform.range)/2)
         updateSliderInput(session, "normal.Approx.Sigma", value = sqrt((input$uniform.range[2] - input$uniform.range[1])^2 / 12) / sqrt(input$sampleSize)) 
@@ -335,7 +335,7 @@ server <- function(input, output, session) {
     plotObj = ggplot(data = RAM$current.sample.df, aes(x = RAM$current.sample.df[, 1])) + theme_bw() + xlab(colnames(RAM$popn.df))
     if (is.numeric(RAM$current.sample.df[1, 1])) {
       plotObj + 
-        geom_histogram(aes(y = ..density..), binwidth = 0.5, fill = "tomato", col = "black") + ylab("Density")
+        geom_histogram(aes(y = ..density..), binwidth = 0.5, fill = "lightblue", col = "black") + ylab("Density")
     } else {
       plotObj + 
         geom_bar(aes(y = (..count..)/sum(..count..), fill = RAM$current.sample.df[, 1]), col = "black", show.legend = FALSE) +
